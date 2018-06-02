@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>nl.hypothermic</groupId>
+  <artifactId>ticomm</artifactId>
+  <version>0.2.1-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20180602.230030</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20180602230030</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.2.1-20180602.230030-1</value>
+        <updated>20180602230030</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.2.1-20180602.230030-1</value>
+        <updated>20180602230030</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
