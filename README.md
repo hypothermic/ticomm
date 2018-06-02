@@ -1,5 +1,5 @@
 # TiComm
-Java wrapper for [TiCables](https://github.com/debrouxl/tilibs).  
+Java wrapper for [TiLibs](https://github.com/debrouxl/tilibs).  
 Currently only availible for *nix  
  Files under `/src/native` belong to their respective owners.
 
