@@ -1,14 +1,13 @@
 package nl.hypothermic.ticomm;
 
-import java.util.Arrays;
-
-import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
+import nl.hypothermic.ticomm.jna.ICalcsLibrary;
 import nl.hypothermic.ticomm.jna.INativeLibrary;
+import nl.hypothermic.ticomm.obj.CableDeviceInfo;
 import nl.hypothermic.ticomm.obj.CableHandle;
 import nl.hypothermic.ticomm.obj.CableModel;
 import nl.hypothermic.ticomm.obj.CablePort;
@@ -26,6 +25,7 @@ public class NativeLoader {
 	}
 	
 	private INativeLibrary lib;
+	private ICalcsLibrary calcs;
 	
 	/**
 	 * Load the library and initialize the TiCables internals
@@ -34,6 +34,7 @@ public class NativeLoader {
 	public int load() {
 		if (lib == null) {
 			lib = (INativeLibrary) Native.loadLibrary("libticables2", INativeLibrary.class);
+			calcs = (ICalcsLibrary) Native.loadLibrary("libticalcs2", ICalcsLibrary.class);
 		}
 		return lib.ticables_library_init();
 	}
@@ -43,7 +44,7 @@ public class NativeLoader {
 	 * @return true if the native library is loaded, false if not
 	 */
 	public boolean isLoaded() {
-		return lib != null;
+		return lib != null && calcs != null;
 	}
 	
 	/**
@@ -57,6 +58,7 @@ public class NativeLoader {
 		}
 		// Unload native lib from JNA
 		NativeLibrary.getInstance("libticables2.so").dispose();
+		NativeLibrary.getInstance("libticalcs2.so").dispose();
 		lib = null;
 	}
 	
@@ -64,8 +66,16 @@ public class NativeLoader {
 	 * Get version of the TiCables library as "X.Y.Z"
 	 * @return version as String
 	 */
-	public String getVersion() {
+	public String getCablesVersion() {
 		return lib.ticables_version_get();
+	}
+	
+	/**
+	 * Get version of the TiCalcs library as "X.Y.Z"
+	 * @return version as String
+	 */
+	public String getCalcsVersion() {
+		return calcs.ticalcs_version_get();
 	}
 	
 	/**
@@ -234,6 +244,34 @@ public class NativeLoader {
 			throw new CableClosedException();
 		}
 		return CableStatus.match(lib.ticables_cable_check(handle.iref));
+	}
+	
+	/**
+	 * Get identifier for handle
+	 * @param handle CableHandle instance
+	 * @return String with identifier
+	 * @throws CableClosedException 
+	 */
+	public String getIdentifier(CableHandle handle) throws CableClosedException {
+		if (!isCableOpen(handle)) {
+			throw new CableClosedException();
+		}
+		return lib.ticables_get_device(handle.iref);
+	}
+	
+	/**
+	 * Get identifier for handle
+	 * @param handle CableHandle instance
+	 * @return String with identifier
+	 * @throws CableClosedException 
+	 */
+	public String getDeviceInfo(CableHandle handle) throws CableClosedException {
+		if (!isCableOpen(handle)) {
+			throw new CableClosedException();
+		}
+		PointerByReference irf = new PointerByReference();
+		lib.ticables_cable_get_device_info(handle.iref, irf);
+		return new CableDeviceInfo(irf.getPointer()).toString();
 	}
 	
 	public static class LoaderException extends java.lang.Exception {
