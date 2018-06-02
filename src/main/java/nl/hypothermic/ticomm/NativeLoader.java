@@ -2,6 +2,7 @@ package nl.hypothermic.ticomm;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
+import com.sun.jna.Platform;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
@@ -33,8 +34,15 @@ public class NativeLoader {
 	 */
 	public int load() {
 		if (lib == null) {
-			lib = (INativeLibrary) Native.loadLibrary("libticables2", INativeLibrary.class);
-			calcs = (ICalcsLibrary) Native.loadLibrary("libticalcs2", ICalcsLibrary.class);
+			if (Platform.isLinux()) {
+				lib = (INativeLibrary) Native.loadLibrary("/native/linux/libticables2.so", INativeLibrary.class);
+				calcs = (ICalcsLibrary) Native.loadLibrary("/native/linux/libticalcs2.so", ICalcsLibrary.class);
+			} else if (Platform.isWindows()) {
+				lib = (INativeLibrary) Native.loadLibrary("/native/win32/libticables2.dll", INativeLibrary.class);
+				calcs = (ICalcsLibrary) Native.loadLibrary("/native/win32/libticalcs2.dll", ICalcsLibrary.class);
+			} else {
+				throw new RuntimeException("ticomm:NativeLoader - Your platform (" + Platform.getOSType() + ") is not supported.");
+			}
 		}
 		return lib.ticables_library_init();
 	}
@@ -265,13 +273,13 @@ public class NativeLoader {
 	 * @return String with identifier
 	 * @throws CableClosedException 
 	 */
-	public String getDeviceInfo(CableHandle handle) throws CableClosedException {
+	public CableDeviceInfo getDeviceInfo(CableHandle handle) throws CableClosedException {
 		if (!isCableOpen(handle)) {
 			throw new CableClosedException();
 		}
 		PointerByReference irf = new PointerByReference();
 		lib.ticables_cable_get_device_info(handle.iref, irf);
-		return new CableDeviceInfo(irf.getPointer()).toString();
+		return new CableDeviceInfo(irf.getPointer());
 	}
 	
 	public static class LoaderException extends java.lang.Exception {

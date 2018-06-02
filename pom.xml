@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.hypothermic</groupId>
   <artifactId>ticomm</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.2.1-SNAPSHOT</version>
   <name>TiComm</name>
   <description>Framework for interacting with Ti calculators.</description>
   
@@ -129,4 +129,5 @@
     <developerConnection>scm:git:ssh://github.com:hypothermic/ticomm.git</developerConnection>
     <url>http://github.com/hypothermic/ticomm/tree/master</url>
   </scm>
+  <url>http://github.com/hypothermic/ticomm/</url>
 </project>

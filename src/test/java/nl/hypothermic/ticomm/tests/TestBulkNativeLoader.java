@@ -9,12 +9,12 @@ public class TestBulkNativeLoader {
 	
 	/**
 	 * Here's where the fun begins: messing around with things you shouldn't be doing
-	 * We create 100 instances of TiCables and see if the unloader unloads them all
+	 * We create 1000 instances of TiCables and see if the unloader unloads them all
 	 * If it doesn't, and you don't have much RAM on your computer, you're screwed.
 	 */
 	@Test public void BulkNativeLoaderTest() {
 		NativeLoader nl = new NativeLoader();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
 			nl.load();
 		}
 		nl.unload();

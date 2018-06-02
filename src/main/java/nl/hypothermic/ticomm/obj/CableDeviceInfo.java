@@ -20,11 +20,19 @@ public class CableDeviceInfo extends Structure {
 	public int family;
 	public int variant;
 	
+	public CableFamily getFamily() {
+		return CableFamily.match(family);
+	}
+	
+	public CableVariant getVariant() {
+		return CableVariant.match(variant);
+	}
+	
 	@Override protected List<String> getFieldOrder() {
 		return Arrays.asList("family", "variant");
 	}
 
 	@Override public String toString() {
-		return "CableDeviceInfo [family=" + this.family + ", variant=" + this.variant + "]";
+		return "CableDeviceInfo [family=" + this.getFamily().toString() + ", variant=" + this.getVariant().toString() + "]";
 	}
 }
